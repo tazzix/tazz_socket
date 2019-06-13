@@ -1,4 +1,4 @@
-package net.ongbut.socketflutterpluginexample;
+package com.tazzix.tazzsocketexample;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

@@ -42,7 +42,7 @@ public class TazzSocket implements MethodCallHandler {
 
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "socket_flutter_plugin");
+    final MethodChannel channel = new MethodChannel(registrar.messenger(), "tazz_socket");
     channel.setMethodCallHandler(new TazzSocket(channel, registrar.activity()));
   }
 
