@@ -1,4 +1,4 @@
-package net.ongbut.socketflutterplugin;
+package com.tazzix.tazzsocket;
 
 import android.util.Log;
 import android.app.Activity;
@@ -27,7 +27,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 /** SocketFlutterPlugin */
-public class SocketFlutterPlugin implements MethodCallHandler {
+public class TazzSocket implements MethodCallHandler {
   /** Plugin registration. */
 
   private Activity activity;
@@ -35,7 +35,7 @@ public class SocketFlutterPlugin implements MethodCallHandler {
   private MethodChannel channel;
   private boolean debug = false;
 
-  public SocketFlutterPlugin(MethodChannel channel, Activity activity) {
+  public TazzSocket(MethodChannel channel, Activity activity) {
     this.channel = channel;
     this.activity = activity;
   }
@@ -43,7 +43,7 @@ public class SocketFlutterPlugin implements MethodCallHandler {
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "socket_flutter_plugin");
-    channel.setMethodCallHandler(new SocketFlutterPlugin(channel, registrar.activity()));
+    channel.setMethodCallHandler(new TazzSocket(channel, registrar.activity()));
   }
 
   @Override

@@ -31,7 +31,7 @@ tazz_socket: ^1.0.0
 
 ### Code:
 ```
-import 'package:tazz_socket/socket_flutter_plugin.dart';
+import 'package:tazz_socket/tazz_socket.dart';
 // ...
 
 IO.socket('http://10.2.2.22:9006', '/v2/socket.io', 'websocket', true, true, true);
@@ -44,7 +44,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:tazz_socket/socket_flutter_plugin.dart';
+import 'package:tazz_socket/tazz_socket.dart';
 
 void main() => runApp(new MyApp());
 

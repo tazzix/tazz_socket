@@ -1,8 +1,8 @@
 name: tazz_socket
 description: A Flutter plugin for SocketIO with Options as parameters.
 version: 1.0.1
-author: tazzix
-homepage:
+author: tazzix <phonedev@tazzix.com>
+homepage: https://github.com/tazzix/tazz_socket
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
@@ -17,8 +17,8 @@ dependencies:
 # The following section is specific to Flutter.
 flutter:
   plugin:
-    androidPackage: com.tazzix.socketflutterplugin
-    pluginClass: SocketFlutterPlugin
+    androidPackage: com.tazzix.tazzsocket
+    pluginClass: TazzSocket
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

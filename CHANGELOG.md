@@ -1,3 +1,4 @@
-## 0.0.1
+## 1.0.1
 
-* TODO: Describe initial release.
+* Implemented custom Options for Socket connections on the native side
+

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:tazz_socket/socket_flutter_plugin.dart';
+import 'package:tazz_socket/tazz_socket.dart';
 
 void main() => runApp(new MyApp());
 
@@ -13,8 +13,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   String _platformVersion = 'Unknown';
-  static const String socket_topic = 'response_device_data';
-  SocketFlutterPlugin myIO = new SocketFlutterPlugin();
+  static const String socket_topic = 'response';
+  TazzSocket myIO = new TazzSocket();
 
   @override
   void initState() {

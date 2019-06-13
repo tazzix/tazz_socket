@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-class SocketFlutterPlugin {
+class TazzSocket {
 
   MethodChannel _channel = const MethodChannel('tazz_socket');
 
