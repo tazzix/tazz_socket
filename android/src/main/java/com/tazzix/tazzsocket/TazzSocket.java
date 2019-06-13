@@ -83,8 +83,8 @@ public class TazzSocket implements MethodCallHandler {
           if (call.argument("sslAcceptAll")) opts.sslContext = mySSLContext;
           opts.path = call.argument("path");
           opts.transports = new String[] { call.argument("transport") };
+          opts.hostnameVerifier = myHostnameVerifier;
           String url = call.argument("url");// , opts);
-          // String url = "https://khi-dev.dev.an10.io";
           mSocket = IO.socket(url, opts);
           if (debug) Log.d("SocketIO ", "Socket initialised: " + url);
         } catch (Exception e) {
