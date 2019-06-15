@@ -3,7 +3,7 @@ import UIKit
 import SocketIO
 import Starscream
 
-public class SwiftSocketFlutterPlugin: NSObject, FlutterPlugin {
+public class SwiftTazzSocket: NSObject, FlutterPlugin {
     
     var mChannel: FlutterMethodChannel?
     
@@ -12,8 +12,8 @@ public class SwiftSocketFlutterPlugin: NSObject, FlutterPlugin {
     }
     
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "socket_flutter_plugin", binaryMessenger: registrar.messenger())
-    let instance = SwiftSocketFlutterPlugin(channel: channel)
+    let channel = FlutterMethodChannel(name: "tazz_socket", binaryMessenger: registrar.messenger())
+    let instance = SwiftTazzSocket(channel: channel)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
     
@@ -23,8 +23,16 @@ public class SwiftSocketFlutterPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     //result("iOS " + UIDevice.current.systemVersion)
     if call.method == "socket" {
-        do{
-            if let args = call.arguments as? [String: String],let url = args["url"] {
+        do {
+            if let args = call.arguments as? [String: AnyObject],
+                let url = args["url"] as? String,
+                let path = args["path"] as? String,
+                //let transport = args["transport"] as? String,
+                let forceNew = args["forceNew"] as? Bool,
+                let debug = args["debug"] as? Bool
+                //let sslAcceptAll = args["sslAcceptAll"]
+            {
+                /*
                 let  ca_cert = Bundle.main.path(forResource: "ca", ofType: "cert")
                 let  intermediate_cert = Bundle.main.path(forResource: "intermediate", ofType: "cert")
                 var certs = [SSLCert]()
@@ -40,32 +48,33 @@ public class SwiftSocketFlutterPlugin: NSObject, FlutterPlugin {
                 
                 let security: SocketIO.SSLSecurity = SocketIO.SSLSecurity(certs: certs, usePublicKeys: false)
                 security.security.validatedDN = false
+                */
                 
                 socketManager = SocketManager(
                     socketURL: URL(string: url)!,
                     config: [
-                        .log(true),
+                        .selfSigned(true),
+                        .log(debug),
+                        .path(path),
                         .compress,
                         .selfSigned(true),
-                        .forceWebsockets(true),
-                        .forceNew(true),
-                        .security(security)
+                        .forceWebsockets(true), //(transport as! String).elementsEqual("websocket")),
+                        .forceNew(forceNew)
+                    //    .security(security)
                     ])
-                socket = socketManager!.defaultSocket
+                socket = socketManager!.socket(forNamespace: "/")
+                //socket = socketManager!.defaultSocket
                 result("created")
             }
-            
-
-        }catch let error as NSError{
+        } catch let error as NSError {
             print(error)
         }
-    }else if call.method == "connect" {
+    } else if call.method == "connect" {
         if socket != nil {
             socket!.connect()
         }
-    }else if call.method == "emit" {
-        
-        if let args = call.arguments as? [String: String], let message = args["message"],let topic = args["topic"]{
+    } else if call.method == "emit" {
+        if let args = call.arguments as? [String: String], let message = args["message"],let topic = args["topic"] {
             let data = message.data(using: .utf8)!
             do {
                 var dictonary:[String:AnyObject]?
@@ -85,10 +94,8 @@ public class SwiftSocketFlutterPlugin: NSObject, FlutterPlugin {
                 print(error)
             }
         }
-
-        
-    }else if call.method == "on" {
-        if let args = call.arguments as? [String: String],let topic = args["topic"]{
+    } else if call.method == "on" {
+        if let args = call.arguments as? [String: AnyObject],let topic = args["topic"] as? String {
             socket!.on(topic) {(data, ack) -> Void in
                 var dictonary:[String:Any] = [:];
                 print(data)
@@ -98,8 +105,7 @@ public class SwiftSocketFlutterPlugin: NSObject, FlutterPlugin {
                 result("sent")
             }
         }
-
-    }else if call.method == "unsubscribe" {
+    } else if call.method == "unsubscribe" {
         let args = call.arguments as? [String: String]
         let topic: String! = args!["topic"]
         
