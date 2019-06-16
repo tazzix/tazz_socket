@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
@@ -29,6 +29,23 @@ class TazzSocket {
     final String socket = await _channel.invokeMethod('on', <String, dynamic>{'topic': topic});
     _channel.setMethodCallHandler((call) {
       if (call.method == 'received') {
+        String received = "";
+        dynamic msg = call.arguments['message'];
+        if (msg is String) {
+          received = msg;
+        } else if (msg is Map) {
+          received = jsonEncode(msg);
+        }
+        Function.apply(_handle, [received]);
+      }
+    });
+    return socket;
+  }
+
+  Future<String> onevent(String event, Function _handle) async {
+    final String socket = await _channel.invokeMethod('onevent', <String, dynamic>{'event': event});
+    _channel.setMethodCallHandler((call) {
+      if (call.method == 'evntrcvd') {
         final String received = call.arguments['message'];
         Function.apply(_handle, [received]);
       }

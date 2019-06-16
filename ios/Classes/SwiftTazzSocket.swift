@@ -59,8 +59,8 @@ public class SwiftTazzSocket: NSObject, FlutterPlugin {
                     .path(path),
                     .compress,
                     .selfSigned(sslAcceptAll),
-                    .forceWebsockets((transport).elementsEqual("websocket")),
-                    .forcePolling((transport).elementsEqual("polling")),
+                    .forceWebsockets(true),//(transport).elementsEqual("websocket")),
+                    //.forcePolling((transport).elementsEqual("polling")),
                     .forceNew(forceNew)
                 //    .security(security)
                 ])
@@ -79,7 +79,8 @@ public class SwiftTazzSocket: NSObject, FlutterPlugin {
             if let data = message.data(using: String.Encoding.utf8) {
                 
                 do {
-                    dictonary = try JSONSerialization.jsonObject(with: data, options: []) as? [String:AnyObject]
+                    print("==================")
+                    dictonary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String:AnyObject]
                     
                     socket!.emit(topic, dictonary!)
                     result("sent")
@@ -92,24 +93,19 @@ public class SwiftTazzSocket: NSObject, FlutterPlugin {
         if let args = call.arguments as? [String: AnyObject],let topic = args["topic"] as? String {
             socket!.on(topic) {(data, ack) -> Void in
                 var dictonary:[String:Any] = [:];
-                print(data)
+                //print(data)
                 dictonary["message"] = data[0];
-                print(data[0])
                 self.mChannel!.invokeMethod("received", arguments: dictonary)
                 result("sent")
             }
         }
-//    } else if call.method == "onevent" {
-//        if let args = call.arguments as? [String: AnyObject],let event = args["event"] as? String {
-//            print(event)
-//            socket?.on(event, callback: { (data, ack) -> Void in
-//                var dictonary:[String:Any] = [:];
-//                print(data)
-//                dictonary["message"] = data[0];
-//                print(data[0])
-//                self.mChannel!.invokeMethod("event", arguments: dictionary)
-//            })
-//        }
+    } else if call.method == "onevent" {
+        if let args = call.arguments as? [String: AnyObject],let event = args["event"] as? String {
+            //print(event)
+            socket!.on(clientEvent: .connect) {data, ack in
+                self.mChannel!.invokeMethod("evntrcvd", arguments: "connect")
+            }
+        }
     } else if call.method == "unsubscribe" {
         let args = call.arguments as? [String: String]
         let topic: String! = args!["topic"]
