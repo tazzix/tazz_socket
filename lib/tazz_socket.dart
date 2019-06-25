@@ -4,22 +4,31 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class TazzSocket {
-
   MethodChannel _channel = const MethodChannel('tazz_socket');
 
   /// Method to construct and initialize a socket object
-  /// 
+  ///
   /// Takes a base URL, path, transport (websocket|polling), wether to accept all certs, force a new connection everytime, or if to enable debug log
-  Future<String> socket(url, path, transport, sslAcceptAll, forceNew, debug) async {
-    final String socket = await _channel.invokeMethod('socket',<String, dynamic>{'url': url, 'path': path, 'transport': transport, 'sslAcceptAll': sslAcceptAll, 'forceNew': forceNew, 'debug': debug});
+  Future<String> socket(
+      url, path, transport, sslAcceptAll, forceNew, debug) async {
+    final String socket =
+        await _channel.invokeMethod('socket', <String, dynamic>{
+      'url': url,
+      'path': path,
+      'transport': transport,
+      'sslAcceptAll': sslAcceptAll,
+      'forceNew': forceNew,
+      'debug': debug
+    });
     return socket;
   }
 
   /// Emit a message on the socket for the given topic
-  /// 
+  ///
   /// Takes a topic to emit on and a message to emit
   Future<String> emit(topic, message) async {
-    final String success = await _channel.invokeMethod('emit',<String, dynamic>{'message': message, 'topic': topic});
+    final String success = await _channel.invokeMethod(
+        'emit', <String, dynamic>{'message': message, 'topic': topic});
     return success;
   }
 
@@ -34,10 +43,11 @@ class TazzSocket {
   }
 
   /// Register a listener for a topic on the socket
-  /// 
+  ///
   /// Takes a topic and a callback handler
   Future<String> on(String topic, Function _handle) async {
-    final String socket = await _channel.invokeMethod('on', <String, dynamic>{'topic': topic});
+    final String socket =
+        await _channel.invokeMethod('on', <String, dynamic>{'topic': topic});
     _channel.setMethodCallHandler((call) {
       if (call.method == 'received') {
         String received = "";
@@ -54,7 +64,8 @@ class TazzSocket {
   }
 
   Future<String> onevent(String event, Function _handle) async {
-    final String socket = await _channel.invokeMethod('onevent', <String, dynamic>{'event': event});
+    final String socket = await _channel
+        .invokeMethod('onevent', <String, dynamic>{'event': event});
     _channel.setMethodCallHandler((call) {
       if (call.method == 'evntrcvd') {
         final String received = call.arguments['message'];
@@ -66,7 +77,8 @@ class TazzSocket {
 
   /// Unsubscribe a listener that was earlier registerd
   Future<String> unsubscribe(topic) async {
-    final String success = await _channel.invokeMethod('unsubscribe', <String, dynamic>{'topic': topic});
+    final String success = await _channel
+        .invokeMethod('unsubscribe', <String, dynamic>{'topic': topic});
     return success;
   }
 }

@@ -7,3 +7,7 @@
 ## 1.0.3
 
 * Added iOS compatibility and native code
+
+## 1.0.4
+
+* Minor pubspec changes
