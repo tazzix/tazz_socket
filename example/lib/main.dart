@@ -55,7 +55,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       myIO.on(socket_topic,(data){
         debugPrint(data.toString());
       });
-      myIO.emit('request',jsonEncode(jsonDecode(jsonData)));
+      Future.delayed(const Duration(milliseconds: 2500), () {
+        myIO.emit('request',jsonEncode(jsonDecode(jsonData)));
+      });
     } on PlatformException {
       _platformVersion = 'Failed to get platform version.';
     }

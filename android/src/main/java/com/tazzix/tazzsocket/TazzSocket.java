@@ -46,6 +46,7 @@ public class TazzSocket implements MethodCallHandler {
     channel.setMethodCallHandler(new TazzSocket(channel, registrar.activity()));
   }
 
+  /** intercept calls to plugin from Flutter Dart code. */
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     if (call.method.equals("socket")) {
@@ -79,12 +80,12 @@ public class TazzSocket implements MethodCallHandler {
             }
           };
           IO.Options opts = new IO.Options();
-          opts.forceNew = call.argument("sslAcceptAll");
+          opts.forceNew = call.argument("forceNew");
           if (call.argument("sslAcceptAll")) opts.sslContext = mySSLContext;
           opts.path = call.argument("path");
           opts.transports = new String[] { call.argument("transport") };
           opts.hostnameVerifier = myHostnameVerifier;
-          String url = call.argument("url");// , opts);
+          String url = call.argument("url");
           mSocket = IO.socket(url, opts);
           if (debug) Log.d("SocketIO ", "Socket initialised: " + url);
         } catch (Exception e) {
@@ -130,6 +131,7 @@ public class TazzSocket implements MethodCallHandler {
     }
   }
 
+  /** Call back for data recieved on socket to hand back to Flutter. */
   private Emitter.Listener onNewMessage = new Emitter.Listener() {
     @Override
     public void call(final Object... args) {
