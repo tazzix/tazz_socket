@@ -1,11 +1,12 @@
 name: tazz_socket
-description: A Flutter plugin for SocketIO with Options as parameters.
+description: A Flutter plugin for SocketIO on both iOS and Android with Options as parameters. Unlike other Socket.IO implementations for flutter, this allows custom parameters to be passed through, e.g. path, transport; and booleans for SSL certs, forcing new connections and debug.
 version: 1.0.1
 author: tazzix <phonedev@tazzix.com>
 homepage: https://github.com/tazzix/tazz_socket
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
+  flutter: ^1.0.0
 
 dependencies:
   flutter:
